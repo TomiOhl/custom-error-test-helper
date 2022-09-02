@@ -1,16 +1,21 @@
-const expect = require("chai").expect;
-const { utils } = require("ethers");
+import { expect } from "chai";
+import { utils } from "ethers";
 
-async function expectRevertCustomError(contractInstance, contractCall, errorName, values) {
+export async function expectRevertCustomError(
+  contractInstance: any,
+  contractCall: Promise<any>,
+  errorName: string,
+  values?: any[]
+) {
   try {
     await contractCall;
     expect.fail("Expected promise to throw but it didn't");
-  } catch (revert) {
+  } catch (revert: any) {
     if (errorName) {
-      const errorAbi = contractInstance.abi.find((elem) => elem.type === "error" && elem.name === errorName);
+      const errorAbi = contractInstance.abi.find((elem: any) => elem.type === "error" && elem.name === errorName);
       expect(errorAbi, `Expected custom error ${errorName}`).to.exist;
 
-      const types = errorAbi.inputs.map((elem) => elem.type);
+      const types = errorAbi.inputs.map((elem: any) => elem.type);
 
       const errorId = utils
         .solidityKeccak256(["string"], [`${errorName}(${types ? types.toString() : ""})`])
@@ -25,7 +30,3 @@ async function expectRevertCustomError(contractInstance, contractCall, errorName
     }
   }
 }
-
-module.exports = {
-  expectRevertCustomError,
-};
