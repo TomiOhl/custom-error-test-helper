@@ -11,8 +11,7 @@ export async function expectRevertCustomError(
     await contractCall;
     expect.fail("Expected promise to throw but it didn't");
   } catch (revert: any) {
-    if (errorName) {
-      const errorAbi = contractInstance.abi.find((elem: any) => elem.type === "error" && elem.name === errorName);
+    const errorAbi = contractInstance.abi.find((elem: any) => elem.type === "error" && elem.name === errorName);
       expect(errorAbi, `Expected custom error ${errorName}`).to.exist;
 
       const types = errorAbi.inputs.map((elem: any) => elem.type);
@@ -26,7 +25,6 @@ export async function expectRevertCustomError(
         expect(values.length, "Expected the number of values to match the number of types").to.eq(types.length);
         const decodedValues = utils.defaultAbiCoder.decode(types, utils.hexDataSlice(revert.data.result, 4));
         decodedValues.forEach((elem, index) => expect(elem.toString()).to.eq(values[index].toString()));
-      }
     }
   }
 }
