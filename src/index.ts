@@ -30,7 +30,8 @@ export async function expectRevertCustomError(
 
     if (values) {
       expect(values.length, "Expected the number of values to match the number of types").to.eq(types.length);
-      const decodedValues = utils.defaultAbiCoder.decode(types, utils.hexDataSlice(revert.data.result, 4));
+      const revertData = typeof revert.data === "string" ? revert.data : revert.data.result;
+      const decodedValues = utils.defaultAbiCoder.decode(types, utils.hexDataSlice(revertData, 4));
       decodedValues.forEach((elem, index) => expect(elem.toString()).to.eq(values[index].toString()));
     }
   }
