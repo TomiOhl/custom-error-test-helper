@@ -22,8 +22,10 @@
   "author": "Tomi_Ohl",
   "license": "MIT",
   "dependencies": {
-    "chai": "^4.3.6",
-    "ethers": "^5.7.0"
+    "@ethersproject/abi": "^5.7.0",
+    "@ethersproject/bytes": "^5.7.0",
+    "@ethersproject/solidity": "^5.7.0",
+    "chai": "^4.3.6"
   },
   "devDependencies": {
     "@types/chai": "^4.3.3",

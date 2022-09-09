@@ -1,5 +1,7 @@
+import { defaultAbiCoder } from "@ethersproject/abi";
+import { hexDataSlice } from "@ethersproject/bytes";
+import { keccak256 } from "@ethersproject/solidity";
 import { expect } from "chai";
-import { utils } from "ethers";
 
 /**
  * Tests a contract call if it reverts with a specific custom error.
@@ -23,15 +25,13 @@ export async function expectRevertCustomError(
 
     const types: string[] = errorAbi.inputs.map((elem: any) => elem.type);
 
-    const errorId = utils
-      .solidityKeccak256(["string"], [`${errorName}(${types ? types.toString() : ""})`])
-      .substring(0, 10);
+    const errorId = keccak256(["string"], [`${errorName}(${types ? types.toString() : ""})`]).substring(0, 10);
     expect(JSON.stringify(revert), `Expected custom error ${errorName} (${errorId})`).to.include(errorId);
 
     if (values) {
       expect(values.length, "Expected the number of values to match the number of types").to.eq(types.length);
       const revertData = typeof revert.data === "string" ? revert.data : revert.data.result;
-      const decodedValues = utils.defaultAbiCoder.decode(types, utils.hexDataSlice(revertData, 4));
+      const decodedValues = defaultAbiCoder.decode(types, hexDataSlice(revertData, 4));
       decodedValues.forEach((elem, index) => expect(elem.toString()).to.eq(values[index].toString()));
     }
   }
