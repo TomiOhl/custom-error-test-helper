@@ -24,13 +24,13 @@ export async function expectRevertCustomError(
     expect(errorAbi, `Expected custom error ${errorName}`).to.exist;
 
     const types: string[] = errorAbi.inputs.map((elem: any) => elem.type);
+    const revertData = typeof revert.data === "string" ? revert.data : revert.data.result;
 
     const errorId = keccak256(["string"], [`${errorName}(${types ? types.toString() : ""})`]).substring(0, 10);
-    expect(JSON.stringify(revert), `Expected custom error ${errorName} (${errorId})`).to.include(errorId);
+    expect(JSON.stringify(revertData), `Expected custom error ${errorName} (${errorId})`).to.include(errorId);
 
     if (values) {
       expect(values.length, "Expected the number of values to match the number of types").to.eq(types.length);
-      const revertData = typeof revert.data === "string" ? revert.data : revert.data.result;
       const decodedValues = defaultAbiCoder.decode(types, hexDataSlice(revertData, 4));
       decodedValues.forEach((elem, index) => expect(elem.toString()).to.eq(values[index].toString()));
     }
