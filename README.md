@@ -24,15 +24,22 @@ contract("MyContract", function (accounts) {
 
   it("reverts with an error with no parameters", async function () {
     // error SomeError0();
-    await expectRevertCustomError(MyContract, this.contract.someFunction0(), "SomeError0");
+    await expectRevertCustomError(
+      MyContract,
+      this.contract.someFunction0(),
+      "SomeError0"
+    );
   });
 
   it("reverts with an error with parameters", async function () {
     // error SomeError1(uint256 one, address vb);
-    await expectRevertCustomError(MyContract, this.contract.someFunction1(), "SomeError1", [
-      1,
-      "0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B",
-    ]);
+    await expectRevertCustomError(
+      MyContract,
+      this.contract.someFunction1(),
+      "SomeError1",
+      [1, "0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B"] // providing error params is optional
+    );
   });
 });
+
 ```
